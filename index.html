@@ -3,16 +3,37 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Ashith Prakas: data feeds and fast dashboards</title>
-  <meta name="description" content="Independent developer in Kochi, India. Fixed-price data feeds, reports and Angular dashboards, delivered from a written brief.">
+  <title>Ashith Prakas: public web data, turned into dashboards and reports</title>
+  <meta name="description" content="Software engineer in Kochi, India. I turn public web data into dashboards and reports a team can use. Fixed price, written brief.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231c5cab'/%3E%3Ctext x='16' y='23' font-family='sans-serif' font-size='20' font-weight='600' text-anchor='middle' fill='white'%3EA%3C/text%3E%3C/svg%3E">
+  <meta property="og:title" content="Ashith Prakas: public web data, turned into dashboards and reports">
+  <meta property="og:description" content="Ad Watch, a dashboard over 4,687 Google ads from 19 brands, and what the data says.">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('portfolio-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    })();
+  </script>
   <style>
+    @font-face { font-family: 'IBM Plex Sans'; font-weight: 400; font-style: normal; font-display: swap; src: url('assets/fonts/ibm-plex-sans-latin-400-normal.woff2') format('woff2'); }
+    @font-face { font-family: 'IBM Plex Sans'; font-weight: 500; font-style: normal; font-display: swap; src: url('assets/fonts/ibm-plex-sans-latin-500-normal.woff2') format('woff2'); }
+    @font-face { font-family: 'IBM Plex Sans'; font-weight: 600; font-style: normal; font-display: swap; src: url('assets/fonts/ibm-plex-sans-latin-600-normal.woff2') format('woff2'); }
+
     :root {
       color-scheme: light;
       --surface: #fcfcfb;
       --ink: #1c2430;
       --ink-2: #566070;
       --rule: #dfe2e6;
-      --accent: #2a78d6;
+      --hover: #f1f3f5;
+      --link: #1c5cab;
+      --btn-bg: #1c5cab;
+      --btn-ink: #ffffff;
+      --series-1: #2a78d6;
+      --series-2: #eb6834;
+      --series-3: #1baf7a;
     }
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme='light']) {
@@ -21,7 +42,13 @@
         --ink: #f0efec;
         --ink-2: #c3c2b7;
         --rule: #34363a;
-        --accent: #6da7ec;
+        --hover: #242423;
+        --link: #6da7ec;
+        --btn-bg: #6da7ec;
+        --btn-ink: #14181d;
+        --series-1: #3987e5;
+        --series-2: #d95926;
+        --series-3: #199e70;
       }
     }
     :root[data-theme='dark'] {
@@ -30,67 +57,197 @@
       --ink: #f0efec;
       --ink-2: #c3c2b7;
       --rule: #34363a;
-      --accent: #6da7ec;
+      --hover: #242423;
+      --link: #6da7ec;
+      --btn-bg: #6da7ec;
+      --btn-ink: #14181d;
+      --series-1: #3987e5;
+      --series-2: #d95926;
+      --series-3: #199e70;
     }
+
     * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      background: var(--surface);
-      color: var(--ink);
-      font: 16px/1.6 system-ui, -apple-system, 'Segoe UI', sans-serif;
-    }
-    main { max-width: 720px; margin: 0 auto; padding: 48px 16px 80px; }
-    h1 { font-size: 32px; line-height: 1.2; margin: 0 0 8px; font-weight: 600; }
-    h2 { font-size: 18px; margin: 40px 0 8px; font-weight: 600; padding-top: 24px; border-top: 1px solid var(--rule); }
+    html { font-family: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 16px; font-variant-numeric: tabular-nums; }
+    body { margin: 0; background: var(--surface); color: var(--ink); line-height: 1.6; }
+    a { color: var(--link); }
+    :focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
     p { margin: 0 0 12px; }
-    .lede { font-size: 20px; color: var(--ink); }
-    .meta { color: var(--ink-2); font-size: 14px; }
-    a { color: var(--accent); }
-    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-    ul { padding-left: 20px; margin: 0 0 12px; }
-    li { margin-bottom: 8px; }
-    .todo { background: #fff4d6; color: #5c4300; padding: 0 4px; border-radius: 3px; }
-    @media (prefers-color-scheme: dark) { :root:not([data-theme='light']) .todo { background: #3a2f10; color: #f3dca0; } }
-    :root[data-theme='dark'] .todo { background: #3a2f10; color: #f3dca0; }
-    footer { margin-top: 48px; color: var(--ink-2); font-size: 14px; }
+
+    .col { width: min(720px, calc(100% - 32px)); margin-inline: auto; }
+    .wide { width: min(1040px, calc(100% - 32px)); margin-inline: auto; }
+
+    header.top { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; padding: 24px 0 0; }
+    .name { font-weight: 600; font-size: 16px; }
+    .name span { color: var(--ink-2); font-weight: 400; }
+    .top-actions { display: flex; gap: 16px; align-items: baseline; font-size: 14px; }
+    .theme-btn { background: none; border: 1px solid var(--rule); border-radius: 4px; padding: 4px 10px; cursor: pointer; font: inherit; color: var(--ink); }
+    .theme-btn:hover { background: var(--hover); }
+
+    .hero { padding: 56px 0 24px; }
+    h1 { font-size: 40px; line-height: 1.15; font-weight: 600; margin: 0 0 16px; letter-spacing: -0.01em; }
+    .lede { font-size: 20px; color: var(--ink-2); margin: 0 0 24px; max-width: 60ch; }
+    .btns { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+    .btn { display: inline-block; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-weight: 500; border: 1px solid var(--btn-bg); }
+    .btn--fill { background: var(--btn-bg); color: var(--btn-ink); }
+    .btn--line { background: none; color: var(--link); border-color: var(--rule); }
+    .btn--line:hover { background: var(--hover); }
+
+    figure.shot { margin: 24px auto 0; }
+    figure.shot img { width: 100%; height: auto; border: 1px solid var(--rule); border-radius: 4px; }
+    .shot--light { display: block; }
+    figure.shot figcaption { color: var(--ink-2); font-size: 14px; margin-top: 8px; }
+    .shot--dark { display: none; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme='light']) .shot--light { display: none; }
+      :root:not([data-theme='light']) .shot--dark { display: block; }
+    }
+    :root[data-theme='dark'] .shot--light { display: none; }
+    :root[data-theme='dark'] .shot--dark { display: block; }
+
+    section { padding: 48px 0 0; }
+    h2 { font-size: 28px; line-height: 1.25; font-weight: 600; margin: 0 0 16px; padding-top: 32px; border-top: 1px solid var(--rule); }
+    h3 { font-size: 20px; font-weight: 600; margin: 0 0 8px; }
+
+    ul.findings { list-style: none; padding: 0; margin: 16px 0; }
+    ul.findings li { padding: 12px 0; border-top: 1px solid var(--rule); }
+    ul.findings li:last-child { border-bottom: 1px solid var(--rule); }
+    .caveat { color: var(--ink-2); font-size: 15px; }
+
+    .chart { margin: 24px 0 8px; }
+    .chart h3 { font-size: 16px; }
+    .legend { display: flex; gap: 16px; font-size: 14px; color: var(--ink-2); margin: 0 0 8px; }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+    .s0 { background: var(--series-1); } .s1 { background: var(--series-2); } .s2 { background: var(--series-3); }
+    .plot { overflow-x: auto; }
+    .plot svg { width: 100%; min-width: 560px; height: auto; display: block; }
+    .plot text { fill: var(--ink-2); font-size: 12px; font-family: inherit; }
+    .plot text.lab { fill: var(--ink); }
+    .plot .seg-0 { fill: var(--series-1); } .plot .seg-1 { fill: var(--series-2); } .plot .seg-2 { fill: var(--series-3); }
+    .plot .axis { stroke: var(--rule); stroke-width: 1; }
+    details.data { font-size: 14px; margin-top: 8px; }
+    details.data summary { cursor: pointer; color: var(--ink-2); }
+    details.data table { border-collapse: collapse; width: 100%; margin-top: 8px; }
+    details.data th, details.data td { text-align: left; padding: 3px 8px 3px 0; border-bottom: 1px solid var(--rule); }
+    details.data .num { text-align: right; }
+    details.data .scroll { max-height: 280px; overflow: auto; }
+
+    .offer { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 16px; }
+    @media (max-width: 720px) { .offer { grid-template-columns: 1fr; gap: 8px; } h1 { font-size: 30px; } .lede { font-size: 18px; } }
+    .offer div { border-top: 1px solid var(--rule); padding-top: 12px; }
+
+    footer { margin-top: 64px; padding: 16px 0 48px; border-top: 1px solid var(--rule); color: var(--ink-2); font-size: 14px; }
   </style>
 </head>
 <body>
+<header class="top col">
+  <div class="name">Ashith Prakas <span>· Software engineer, Kochi, India</span></div>
+  <div class="top-actions">
+    <a href="mailto:ashithprakas@gmail.com">ashithprakas@gmail.com</a>
+    <button type="button" class="theme-btn" id="theme-btn" aria-label="Switch colour theme">Theme</button>
+  </div>
+</header>
+
 <main>
-  <h1>Ashith Prakas</h1>
-  <p class="meta">Independent developer · Kochi, India</p>
-  <p class="lede">I build data feeds and fast dashboards for small teams: public-web data turned into a weekly report, a clean dataset, or a dashboard that stays quick with thousands of rows.</p>
+  <div class="hero col">
+    <h1>I turn public web data into dashboards and reports a team can use.</h1>
+    <p class="lede">Here is one I built: 4,687 Google ads from 19 direct-to-consumer brands, in a table that stays fast and charts that filter it.</p>
+    <div class="btns">
+      <a class="btn btn--fill" href="https://ashithprakas.github.io/ad-watch-demo/">Open the live demo</a>
+      <a class="btn btn--line" href="https://github.com/ashithprakas/ad-watch-demo">Source on GitHub</a>
+    </div>
+  </div>
 
-  <h2>What I build</h2>
-  <ul>
-    <li><strong>Data feed and report.</strong> A recurring dataset or report from public web sources, sent where you work: email, a Google Sheet, CSV or a simple page. Examples: competitor ads, price and listing changes, search trends, patent alerts.</li>
-    <li><strong>Dashboard sprint.</strong> One clear dashboard on your own data: big tables, filters, charts and, where useful, live updates or a map. Built in Angular and TypeScript, with a small backend if needed.</li>
-  </ul>
-  <p>Fixed price, written scope, and an acceptance test we agree before work starts.</p>
+  <figure class="shot wide">
+    <img class="shot--light" src="assets/img/ad-watch-light.png" width="1200" height="820"
+         alt="Ad Watch dashboard in light theme: stacked bars of ads per brand by format, a weekly line chart of new ads, and a filter row above them.">
+    <img class="shot--dark" src="assets/img/ad-watch-dark.png" width="1200" height="820"
+         alt="Ad Watch dashboard in dark theme: stacked bars of ads per brand by format, a weekly line chart of new ads, and a filter row above them.">
+    <figcaption>Ad Watch, a snapshot from 27 October 2026. Angular, TypeScript and AG Grid; the charts are hand-written SVG.</figcaption>
+  </figure>
 
-  <h2>Work you can look at</h2>
-  <ul>
-    <li><strong>Ad Watch</strong>: an Angular dashboard over Google ads from 19 brands, with linked charts, a fast filterable table, CSV export and light and dark themes. <a href="https://ashithprakas.github.io/ad-watch-demo/">Live demo</a> · <a href="https://github.com/ashithprakas/ad-watch-demo">source</a></li>
-    <li><strong>Apify tools</strong>, published and priced per result:
-      <a href="https://apify.com/datasmithhq/google-trends-scraper">Google Trends</a>,
-      <a href="https://apify.com/datasmithhq/google-ads-transparency-scraper">Google Ads Transparency</a> and
-      <a href="https://apify.com/datasmithhq/google-patents-scraper">Google Patents</a>, published under the DataSmith HQ account.</li>
-    <li><strong>JobQueue</strong>: a distributed job queue in C#/.NET with Redis streams, retries, tracing and CI. <a href="https://github.com/ashithprakas/JobQueue">Source on GitHub</a></li>
-  </ul>
+  <section class="col" id="case-study">
+    <h2>What the data says about how DTC brands advertise</h2>
+    <p>I wanted to see how direct-to-consumer brands run Google ads. Using a scraper I built and publish on Apify, I collected every ad that Google's Ads Transparency Center listed as shown in the US over 30 days for 50 brand domains. 19 of the 50 returned ads: 4,687 in total.</p>
+    <ul class="findings">
+      <li><strong>Text dominates.</strong> 61% of the ads are text, 22% video and 17% image.</li>
+      <li><strong>Brands differ a lot.</strong> 88% of quip's ads and 56% of Oura's are video; 91% of Olipop's and Warby Parker's are text.</li>
+      <li><strong>New ads.</strong> 1,008 of the 4,687 (21.5%) were first shown in the last 30 days. Brooklinen started the most (244 of its 722); Gymshark had the highest share of new ads (44%).</li>
+      <li><strong>Churn.</strong> The median Gymshark ad had been running 21 days; the median Warby Parker ad, 756.</li>
+    </ul>
 
-  <h2>How I work</h2>
-  <ul>
-    <li><strong>Written and asynchronous.</strong> You send a short written brief; I reply within 48 hours with a spec and a fixed quote. No calls.</li>
-    <li><strong>Weekend delivery.</strong> I build on weekends, so delivery dates fall on weekends.</li>
-    <li><strong>Two revision rounds</strong> and 30 days of fixes after acceptance.</li>
-    <li><strong>AI-assisted development</strong>, reviewed by me. I tell you up front and won't put your data into any tool you haven't agreed to.</li>
-    <li><strong>Public data only</strong>, or data you own and hand over: no logins, no personal data.</li>
-  </ul>
+    <div class="chart">
+      <h3>Format mix by brand, sorted by video share</h3>
+      <div class="legend" aria-hidden="true">
+        <span><i class="swatch s0"></i>Text</span><span><i class="swatch s1"></i>Image</span><span><i class="swatch s2"></i>Video</span>
+      </div>
+      <div class="plot"><svg viewBox="0 0 720 516" role="img" aria-label="Share of text, image and video ads for each of 19 brands, sorted by video share. Full figures are in the table below the chart."><text x="716" y="12" text-anchor="end">Video share</text><line class="axis" x1="140" x2="140" y1="18" y2="516"/><g><title>quip: 72 ads; text 0, image 9, video 63</title><text class="lab" x="132" y="39.0" text-anchor="end">quip</text><rect class="seg-1" x="140.0" y="28.0" width="63.5" height="14"/><path class="seg-2" d="M205.5,28.0H660.0Q664.0,28.0 664.0,32.0V38.0Q664.0,42.0 660.0,42.0H205.5Z"/><text x="672" y="39.0">88%</text></g><g><title>Oura: 275 ads; text 55, image 66, video 154</title><text class="lab" x="132" y="65.0" text-anchor="end">Oura</text><rect class="seg-0" x="140.0" y="54.0" width="102.8" height="14"/><rect class="seg-1" x="244.8" y="54.0" width="123.8" height="14"/><path class="seg-2" d="M370.6,54.0H660.0Q664.0,54.0 664.0,58.0V64.0Q664.0,68.0 660.0,68.0H370.6Z"/><text x="672" y="65.0">56%</text></g><g><title>Gymshark: 151 ads; text 43, image 37, video 71</title><text class="lab" x="132" y="91.0" text-anchor="end">Gymshark</text><rect class="seg-0" x="140.0" y="80.0" width="147.2" height="14"/><rect class="seg-1" x="289.2" y="80.0" width="126.4" height="14"/><path class="seg-2" d="M417.6,80.0H660.0Q664.0,80.0 664.0,84.0V90.0Q664.0,94.0 660.0,94.0H417.6Z"/><text x="672" y="91.0">47%</text></g><g><title>AG1: 470 ads; text 243, image 19, video 208</title><text class="lab" x="132" y="117.0" text-anchor="end">AG1</text><rect class="seg-0" x="140.0" y="106.0" width="268.9" height="14"/><rect class="seg-1" x="410.9" y="106.0" width="19.2" height="14"/><path class="seg-2" d="M432.1,106.0H660.0Q664.0,106.0 664.0,110.0V116.0Q664.0,120.0 660.0,120.0H432.1Z"/><text x="672" y="117.0">44%</text></g><g><title>Away: 318 ads; text 168, image 54, video 96</title><text class="lab" x="132" y="143.0" text-anchor="end">Away</text><rect class="seg-0" x="140.0" y="132.0" width="274.8" height="14"/><rect class="seg-1" x="416.8" y="132.0" width="87.0" height="14"/><path class="seg-2" d="M505.8,132.0H660.0Q664.0,132.0 664.0,136.0V142.0Q664.0,146.0 660.0,146.0H505.8Z"/><text x="672" y="143.0">30%</text></g><g><title>Rhone: 114 ads; text 59, image 25, video 30</title><text class="lab" x="132" y="169.0" text-anchor="end">Rhone</text><rect class="seg-0" x="140.0" y="158.0" width="269.2" height="14"/><rect class="seg-1" x="411.2" y="158.0" width="112.9" height="14"/><path class="seg-2" d="M526.1,158.0H660.0Q664.0,158.0 664.0,162.0V168.0Q664.0,172.0 660.0,172.0H526.1Z"/><text x="672" y="169.0">26%</text></g><g><title>Purple: 240 ads; text 133, image 58, video 49</title><text class="lab" x="132" y="195.0" text-anchor="end">Purple</text><rect class="seg-0" x="140.0" y="184.0" width="288.4" height="14"/><rect class="seg-1" x="430.4" y="184.0" width="124.6" height="14"/><path class="seg-2" d="M557.0,184.0H660.0Q664.0,184.0 664.0,188.0V194.0Q664.0,198.0 660.0,198.0H557.0Z"/><text x="672" y="195.0">20%</text></g><g><title>Glossier: 299 ads; text 172, image 67, video 60</title><text class="lab" x="132" y="221.0" text-anchor="end">Glossier</text><rect class="seg-0" x="140.0" y="210.0" width="299.4" height="14"/><rect class="seg-1" x="441.4" y="210.0" width="115.4" height="14"/><path class="seg-2" d="M558.8,210.0H660.0Q664.0,210.0 664.0,214.0V220.0Q664.0,224.0 660.0,224.0H558.8Z"/><text x="672" y="221.0">20%</text></g><g><title>Helix Sleep: 245 ads; text 166, image 31, video 48</title><text class="lab" x="132" y="247.0" text-anchor="end">Helix Sleep</text><rect class="seg-0" x="140.0" y="236.0" width="353.0" height="14"/><rect class="seg-1" x="495.0" y="236.0" width="64.3" height="14"/><path class="seg-2" d="M561.3,236.0H660.0Q664.0,236.0 664.0,240.0V246.0Q664.0,250.0 660.0,250.0H561.3Z"/><text x="672" y="247.0">20%</text></g><g><title>Casper: 90 ads; text 49, image 24, video 17</title><text class="lab" x="132" y="273.0" text-anchor="end">Casper</text><rect class="seg-0" x="140.0" y="262.0" width="283.3" height="14"/><rect class="seg-1" x="425.3" y="262.0" width="137.7" height="14"/><path class="seg-2" d="M565.0,262.0H660.0Q664.0,262.0 664.0,266.0V272.0Q664.0,276.0 660.0,276.0H565.0Z"/><text x="672" y="273.0">19%</text></g><g><title>Harry&#x27;s: 36 ads; text 21, image 9, video 6</title><text class="lab" x="132" y="299.0" text-anchor="end">Harry&#x27;s</text><rect class="seg-0" x="140.0" y="288.0" width="303.7" height="14"/><rect class="seg-1" x="445.7" y="288.0" width="129.0" height="14"/><path class="seg-2" d="M576.7,288.0H660.0Q664.0,288.0 664.0,292.0V298.0Q664.0,302.0 660.0,302.0H576.7Z"/><text x="672" y="299.0">17%</text></g><g><title>Brooklinen: 722 ads; text 422, image 196, video 104</title><text class="lab" x="132" y="325.0" text-anchor="end">Brooklinen</text><rect class="seg-0" x="140.0" y="314.0" width="304.3" height="14"/><rect class="seg-1" x="446.3" y="314.0" width="140.2" height="14"/><path class="seg-2" d="M588.5,314.0H660.0Q664.0,314.0 664.0,318.0V324.0Q664.0,328.0 660.0,328.0H588.5Z"/><text x="672" y="325.0">14%</text></g><g><title>Reformation: 263 ads; text 201, image 31, video 31</title><text class="lab" x="132" y="351.0" text-anchor="end">Reformation</text><rect class="seg-0" x="140.0" y="340.0" width="398.5" height="14"/><rect class="seg-1" x="540.5" y="340.0" width="59.8" height="14"/><path class="seg-2" d="M602.2,340.0H660.0Q664.0,340.0 664.0,344.0V350.0Q664.0,354.0 660.0,354.0H602.2Z"/><text x="672" y="351.0">12%</text></g><g><title>Vuori: 235 ads; text 184, image 31, video 20</title><text class="lab" x="132" y="377.0" text-anchor="end">Vuori</text><rect class="seg-0" x="140.0" y="366.0" width="408.3" height="14"/><rect class="seg-1" x="550.3" y="366.0" width="67.1" height="14"/><path class="seg-2" d="M619.4,366.0H660.0Q664.0,366.0 664.0,370.0V376.0Q664.0,380.0 660.0,380.0H619.4Z"/><text x="672" y="377.0">9%</text></g><g><title>Summer Fridays: 160 ads; text 101, image 46, video 13</title><text class="lab" x="132" y="403.0" text-anchor="end">Summer Fridays</text><rect class="seg-0" x="140.0" y="392.0" width="328.8" height="14"/><rect class="seg-1" x="470.8" y="392.0" width="148.6" height="14"/><path class="seg-2" d="M621.4,392.0H660.0Q664.0,392.0 664.0,396.0V402.0Q664.0,406.0 660.0,406.0H621.4Z"/><text x="672" y="403.0">8%</text></g><g><title>Allbirds: 111 ads; text 54, image 49, video 8</title><text class="lab" x="132" y="429.0" text-anchor="end">Allbirds</text><rect class="seg-0" x="140.0" y="418.0" width="252.9" height="14"/><rect class="seg-1" x="394.9" y="418.0" width="229.3" height="14"/><path class="seg-2" d="M626.2,418.0H660.0Q664.0,418.0 664.0,422.0V428.0Q664.0,432.0 660.0,432.0H626.2Z"/><text x="672" y="429.0">7%</text></g><g><title>Warby Parker: 760 ads; text 693, image 27, video 40</title><text class="lab" x="132" y="455.0" text-anchor="end">Warby Parker</text><rect class="seg-0" x="140.0" y="444.0" width="475.8" height="14"/><rect class="seg-1" x="617.8" y="444.0" width="16.6" height="14"/><path class="seg-2" d="M636.4,444.0H660.0Q664.0,444.0 664.0,448.0V454.0Q664.0,458.0 660.0,458.0H636.4Z"/><text x="672" y="455.0">5%</text></g><g><title>Olipop: 23 ads; text 21, image 1, video 1</title><text class="lab" x="132" y="481.0" text-anchor="end">Olipop</text><rect class="seg-0" x="140.0" y="470.0" width="476.4" height="14"/><rect class="seg-1" x="618.4" y="470.0" width="20.8" height="14"/><path class="seg-2" d="M641.2,470.0H660.0Q664.0,470.0 664.0,474.0V480.0Q664.0,484.0 660.0,484.0H641.2Z"/><text x="672" y="481.0">4%</text></g><g><title>HelloFresh: 103 ads; text 83, image 19, video 1</title><text class="lab" x="132" y="507.0" text-anchor="end">HelloFresh</text><rect class="seg-0" x="140.0" y="496.0" width="420.3" height="14"/><rect class="seg-1" x="562.3" y="496.0" width="94.7" height="14"/><path class="seg-2" d="M658.9,496.0H660.0Q664.0,496.0 664.0,500.0V506.0Q664.0,510.0 660.0,510.0H658.9Z"/><text x="672" y="507.0">1%</text></g></svg></div>
+      <details class="data">
+        <summary>Chart data as table</summary>
+        <div class="scroll">
+          <table>
+            <thead><tr><th>Brand</th><th class="num">Ads</th><th class="num">Text</th><th class="num">Image</th><th class="num">Video</th><th class="num">Video share</th></tr></thead>
+            <tbody><tr><td>quip</td><td class="num">72</td><td class="num">0</td><td class="num">9</td><td class="num">63</td><td class="num">88%</td></tr><tr><td>Oura</td><td class="num">275</td><td class="num">55</td><td class="num">66</td><td class="num">154</td><td class="num">56%</td></tr><tr><td>Gymshark</td><td class="num">151</td><td class="num">43</td><td class="num">37</td><td class="num">71</td><td class="num">47%</td></tr><tr><td>AG1</td><td class="num">470</td><td class="num">243</td><td class="num">19</td><td class="num">208</td><td class="num">44%</td></tr><tr><td>Away</td><td class="num">318</td><td class="num">168</td><td class="num">54</td><td class="num">96</td><td class="num">30%</td></tr><tr><td>Rhone</td><td class="num">114</td><td class="num">59</td><td class="num">25</td><td class="num">30</td><td class="num">26%</td></tr><tr><td>Purple</td><td class="num">240</td><td class="num">133</td><td class="num">58</td><td class="num">49</td><td class="num">20%</td></tr><tr><td>Glossier</td><td class="num">299</td><td class="num">172</td><td class="num">67</td><td class="num">60</td><td class="num">20%</td></tr><tr><td>Helix Sleep</td><td class="num">245</td><td class="num">166</td><td class="num">31</td><td class="num">48</td><td class="num">20%</td></tr><tr><td>Casper</td><td class="num">90</td><td class="num">49</td><td class="num">24</td><td class="num">17</td><td class="num">19%</td></tr><tr><td>Harry&#x27;s</td><td class="num">36</td><td class="num">21</td><td class="num">9</td><td class="num">6</td><td class="num">17%</td></tr><tr><td>Brooklinen</td><td class="num">722</td><td class="num">422</td><td class="num">196</td><td class="num">104</td><td class="num">14%</td></tr><tr><td>Reformation</td><td class="num">263</td><td class="num">201</td><td class="num">31</td><td class="num">31</td><td class="num">12%</td></tr><tr><td>Vuori</td><td class="num">235</td><td class="num">184</td><td class="num">31</td><td class="num">20</td><td class="num">9%</td></tr><tr><td>Summer Fridays</td><td class="num">160</td><td class="num">101</td><td class="num">46</td><td class="num">13</td><td class="num">8%</td></tr><tr><td>Allbirds</td><td class="num">111</td><td class="num">54</td><td class="num">49</td><td class="num">8</td><td class="num">7%</td></tr><tr><td>Warby Parker</td><td class="num">760</td><td class="num">693</td><td class="num">27</td><td class="num">40</td><td class="num">5%</td></tr><tr><td>Olipop</td><td class="num">23</td><td class="num">21</td><td class="num">1</td><td class="num">1</td><td class="num">4%</td></tr><tr><td>HelloFresh</td><td class="num">103</td><td class="num">83</td><td class="num">19</td><td class="num">1</td><td class="num">1%</td></tr></tbody>
+          </table>
+        </div>
+      </details>
+    </div>
 
-  <h2>Get in touch</h2>
-  <p>Send a short written brief to <a href="mailto:ashithprakas@gmail.com">ashithprakas@gmail.com</a>: the outcome you want, where the data comes from, and a rough budget and date.</p>
+    <p class="caveat"><strong>What this doesn't show:</strong> it is one snapshot of what Google lists, only 19 of the 50 domains returned ads, and it says what brands are running, not what works.</p>
+  </section>
 
-  <footer>© 2026 Ashith Prakas. Brand names on this site label data only.</footer>
+  <section class="col" id="built">
+    <h2>How it is built</h2>
+    <p>A scraper collects the ads, with retries and rate-limit handling. A script turns them into a clean dataset and a short report. The dashboard sits on top. The same three steps work for your data.</p>
+  </section>
+
+  <section class="col" id="offer">
+    <h2>What I can build for you</h2>
+    <div class="offer">
+      <div>
+        <h3>Data feed and report</h3>
+        <p>A recurring dataset or report from public web sources, sent where you work: email, a Google Sheet, CSV or a simple page.</p>
+      </div>
+      <div>
+        <h3>Dashboard sprint</h3>
+        <p>One clear dashboard on your own data: large tables, filters, charts, and live updates or a map where they help.</p>
+      </div>
+    </div>
+    <p>A typical project: a written spec and fixed quote within 48 hours, one to three weekends to build, two rounds of changes, then 30 days of fixes. Fixed price, agreed in writing.</p>
+  </section>
+
+  <section class="col" id="about">
+    <h2>About</h2>
+    <p>I'm a software engineer in Kochi with about four years building data-heavy web applications, mostly Angular and .NET. On the side I build and publish scrapers and small data products. I take one client project at a time and work from a written brief, with no calls, which keeps the scope clear and the price fixed.</p>
+  </section>
+
+  <section class="col" id="contact">
+    <h2>Contact</h2>
+    <p>Send a short written brief to <a href="mailto:ashithprakas@gmail.com">ashithprakas@gmail.com</a>: the outcome you want, where the data lives, and a rough budget and date. I reply within 48 hours and deliver on weekends.</p>
+    <p class="caveat">Elsewhere: <a href="https://github.com/ashithprakas">GitHub</a> · <a href="https://apify.com/datasmithhq">Apify</a></p>
+  </section>
 </main>
+
+<footer class="col">
+  © 2026 Ashith Prakas. Brand names label data only; no affiliation with any brand or Google.
+</footer>
+
+<script>
+  (function () {
+    var btn = document.getElementById('theme-btn');
+    var root = document.documentElement;
+    function current() {
+      return root.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    }
+    function label() { btn.textContent = current() === 'dark' ? 'Light theme' : 'Dark theme'; }
+    btn.addEventListener('click', function () {
+      var next = current() === 'dark' ? 'light' : 'dark';
+      root.dataset.theme = next;
+      try { localStorage.setItem('portfolio-theme', next); } catch (e) {}
+      label();
+    });
+    label();
+  })();
+</script>
 </body>
 </html>
